@@ -15,27 +15,6 @@ const config = {
     // }
 };
 
-const data = {
-    "Inputs": {
-        "WebServiceInput0": [
-            {
-                "Age": "60",
-                "Sex": "M",
-                "ChestPainType": "ASY",
-                "RestingBP": "140",
-                "Cholesterol": "289",
-                "FastingBS": "0",
-                "RestingECG": "Normal",
-                "MaxHR": "172",
-                "ExerciseAngina": "false",
-                "Oldpeak": "0",
-                "ST_Slope": "Up",
-                "HeartDisease": "0"
-            }
-        ]
-    }
-}
-
 function FormSection() {
 
     const [result, setResult] = React.useState(-1);
@@ -66,13 +45,11 @@ function FormSection() {
                 }
             }
             
-            console.log(capsValues)
-            console.log(data)
             axios.post( 
                 'http://fc20a859-00cb-41f5-a5a2-445eccc53548.westeurope.azurecontainer.io/score',
                 request,
                 config
-            ).then(res => setResult(res.data.Results.WebServiceOutput0['Scored Probabilities']))
+            ).then(res => setResult(res.data.Results.WebServiceOutput0[0]['Scored Probabilities']))
             .catch(err => console.log('an error occurred : ', err));
         }
     })
@@ -219,7 +196,7 @@ function FormSection() {
             </div>
             <Button type="submit">Submit</Button>
 
-            {result == -1 ? 
+            {result === -1 ? 
                 <div>Waiting for results</div> :
                 <div>{result > 0.75 ? `Ce patient a de fortes chances d'avoir une maladie cardiovasculaire (> 75%)` : `Ce patient n'est pas a risque`}</div>
             }

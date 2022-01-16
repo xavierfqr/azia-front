@@ -38,6 +38,7 @@ const data = {
 
 function FormSection() {
 
+    const [result, setResult] = React.useState(-1);
     const formik = useFormik({
         initialValues: {
             Age: '',
@@ -71,7 +72,8 @@ function FormSection() {
                 'http://fc20a859-00cb-41f5-a5a2-445eccc53548.westeurope.azurecontainer.io/score',
                 request,
                 config
-            ).then(res => console.log(res)).catch(console.log);
+            ).then(res => setResult(res.data.Results.WebServiceOutput0['Scored Probabilities']))
+            .catch(err => console.log('an error occurred : ', err));
         }
     })
 
@@ -214,10 +216,13 @@ function FormSection() {
                 </tbody>
             </table>
             <div>
-                
-                
             </div>
             <Button type="submit">Submit</Button>
+
+            {result == -1 ? 
+                <div>Waiting for results</div> :
+                <div>{result > 0.75 ? `Ce patient a de fortes chances d'avoir une maladie cardiovasculaire (> 75%)` : `Ce patient n'est pas a risque`}</div>
+            }
         </form>
     )
 }

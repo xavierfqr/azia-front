@@ -44,7 +44,6 @@ function FormSection() {
                     ]
                 }
             }
-            
             axios.post( 
                 'http://fc20a859-00cb-41f5-a5a2-445eccc53548.westeurope.azurecontainer.io/score',
                 request,

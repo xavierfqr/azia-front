@@ -5,37 +5,71 @@ import styles from './FormSection.module.css'
 import axios from 'axios';
 
 const config = {
-    headers: { Authorization: `Bearer lJMrftFFv5XArjg91HCoxInRnRPGh16J`,
+    headers: { 'Authorization': `Bearer lJMrftFFv5XArjg91HCoxInRnRPGh16J`,
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*' }
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers'}
     // Headers: {
     //     'Prediction-Key': `lJMrftFFv5XArjg91HCoxInRnRPGh16J`,
     //     'Content-Type': 'application/json'
     // }
 };
 
+const data = {
+    "Inputs": {
+        "WebServiceInput0": [
+            {
+                "Age": "60",
+                "Sex": "M",
+                "ChestPainType": "ASY",
+                "RestingBP": "140",
+                "Cholesterol": "289",
+                "FastingBS": "0",
+                "RestingECG": "Normal",
+                "MaxHR": "172",
+                "ExerciseAngina": "false",
+                "Oldpeak": "0",
+                "ST_Slope": "Up",
+                "HeartDisease": "0"
+            }
+        ]
+    }
+}
+
 function FormSection() {
 
     const formik = useFormik({
         initialValues: {
-            age: '',
-            sex: '',
-            chestPainType: '',
-            restingBP: '',
-            cholesterol: '',
-            fastingBS: '',
-            restingECG: '',
-            maxHR: '',
-            exerciseAngina: '',
-            oldpeak: '',
+            Age: '',
+            Sex: '',
+            ChestPainType: '',
+            RestingBP: '',
+            Cholesterol: '',
+            FastingBS: '',
+            RestingECG: '',
+            MaxHR: '',
+            ExerciseAngina: '',
+            Oldpeak: '',
             ST_Slope: '',
-            heartDisease: ''
+            HeartDisease: ''
         },
         onSubmit: values => {
-            console.log(values)
+            const entries = Object.entries(values);
+            const capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
+            const capsValues = Object.fromEntries(capsEntries);
+            const request = 
+            {   "Inputs": {
+                    "WebServiceInput0": [
+                        capsValues
+                    ]
+                }
+            }
+            
+            console.log(capsValues)
+            console.log(data)
             axios.post( 
                 'http://fc20a859-00cb-41f5-a5a2-445eccc53548.westeurope.azurecontainer.io/score',
-                values,
+                request,
                 config
             ).then(res => console.log(res)).catch(console.log);
         }
@@ -47,19 +81,19 @@ function FormSection() {
                 <tbody>
                     <tr>
                         <td>
-                            <label htmlFor='age'>Age : </label>
+                            <label htmlFor='Age'>Age : </label>
                         </td>
                         <td>
-                            <Input id="age" name="age" onChange={formik.handleChange} value={formik.values.age}/>
+                            <Input id="Age" name="Age" onChange={formik.handleChange} value={formik.values.Age}/>
                         </td>
                     </tr>
 
                     <tr>
                         <td>
-                            <label htmlFor='sex'>Sex : </label>
+                            <label htmlFor='Sex'>Sex : </label>
                         </td>
                         <td>
-                            <Select name="sex" onChange={formik.handleChange} value={formik.values.sex}>
+                            <Select name="Sex" onChange={formik.handleChange} value={formik.values.Sex}>
                                 <MenuItem selected value="F">F</MenuItem>
                                 <MenuItem value="M">M</MenuItem>
                             </Select>
@@ -68,10 +102,10 @@ function FormSection() {
 
                     <tr>
                         <td>
-                            <label htmlFor='chestPainType'>ChestPainType : </label>
+                            <label htmlFor='ChestPainType'>ChestPainType : </label>
                         </td>
                         <td>
-                            <Select name="chestPainType" onChange={formik.handleChange} value={formik.values.chestPainType}>
+                            <Select name="ChestPainType" onChange={formik.handleChange} value={formik.values.ChestPainType}>
                                 <MenuItem value="TA">TA</MenuItem>
                                 <MenuItem value="ATA">ATA</MenuItem>
                                 <MenuItem value="NAP">NAP</MenuItem>
@@ -82,28 +116,28 @@ function FormSection() {
 
                     <tr>
                         <td>
-                            <label htmlFor='restingBP'>RestingBP : </label>
+                            <label htmlFor='RestingBP'>RestingBP : </label>
                         </td>
                         <td>
-                            <Input id="restingBP" name="restingBP" onChange={formik.handleChange} value={formik.values.restingBP}/>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <label htmlFor='cholesterol'>Cholesterol : </label>
-                        </td>
-                        <td>
-                            <Input id="cholesterol" name="cholesterol" onChange={formik.handleChange} value={formik.values.cholesterol}/>
+                            <Input id="RestingBP" name="RestingBP" onChange={formik.handleChange} value={formik.values.RestingBP}/>
                         </td>
                     </tr>
 
                     <tr>
                         <td>
-                            <label htmlFor='fastingBS'>FastingBS : </label>
+                            <label htmlFor='Cholesterol'>Cholesterol : </label>
                         </td>
                         <td>
-                            <Select name="fastingBS" onChange={formik.handleChange} value={formik.values.fastingBS}>
+                            <Input id="Cholesterol" name="Cholesterol" onChange={formik.handleChange} value={formik.values.Cholesterol}/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <label htmlFor='FastingBS'>FastingBS : </label>
+                        </td>
+                        <td>
+                            <Select name="FastingBS" onChange={formik.handleChange} value={formik.values.FastingBS}>
                                 <MenuItem value="1">{`1 (if FastingBS > 120 mg/dl)`}</MenuItem>
                                 <MenuItem value="0">0 (otherwise)</MenuItem>
                             </Select>
@@ -112,10 +146,10 @@ function FormSection() {
 
                     <tr>
                         <td>
-                            <label htmlFor='restingECG'>RestingECG : </label>
+                            <label htmlFor='RestingECG'>RestingECG : </label>
                         </td>
                         <td>
-                            <Select name="restingECG" onChange={formik.handleChange} value={formik.values.restingECG}>
+                            <Select name="RestingECG" onChange={formik.handleChange} value={formik.values.RestingECG}>
                                 <MenuItem value="Normal">Normal</MenuItem>
                                 <MenuItem value="ST">ST</MenuItem>
                                 <MenuItem value="LVH">LVH</MenuItem>
@@ -125,19 +159,19 @@ function FormSection() {
 
                     <tr>
                         <td>
-                            <label htmlFor='maxHR'>MaxHR : </label>
+                            <label htmlFor='MaxHR'>MaxHR : </label>
                         </td>
                         <td>
-                            <Input id="maxHR" name="maxHR" onChange={formik.handleChange} value={formik.values.maxHR}/>
+                            <Input id="MaxHR" name="MaxHR" onChange={formik.handleChange} value={formik.values.MaxHR}/>
                         </td>
                     </tr>
 
                     <tr>
                         <td>
-                            <label htmlFor='exerciseAngina'>ExerciseAngina : </label>
+                            <label htmlFor='ExerciseAngina'>ExerciseAngina : </label>
                         </td>
                         <td>
-                            <Select name="exerciseAngina" onChange={formik.handleChange} value={formik.values.exerciseAngina}>
+                            <Select name="ExerciseAngina" onChange={formik.handleChange} value={formik.values.ExerciseAngina}>
                                 <MenuItem value="true">Yes</MenuItem>
                                 <MenuItem value="false">No</MenuItem>
                             </Select>
@@ -146,10 +180,10 @@ function FormSection() {
 
                     <tr>
                         <td>
-                            <label htmlFor='oldpeak'>Oldpeak : </label>
+                            <label htmlFor='Oldpeak'>Oldpeak : </label>
                         </td>
                         <td>
-                            <Input id="oldpeak" name="oldpeak" onChange={formik.handleChange} value={formik.values.oldpeak}/>
+                            <Input id="Oldpeak" name="Oldpeak" onChange={formik.handleChange} value={formik.values.Oldpeak}/>
                         </td>
                     </tr>
 
@@ -168,10 +202,10 @@ function FormSection() {
 
                     <tr>
                         <td>
-                            <label htmlFor='heartDisease'>HeartDisease : </label>
+                            <label htmlFor='HeartDisease'>HeartDisease : </label>
                         </td>
                         <td>
-                            <Select name="heartDisease" onChange={formik.handleChange} value={formik.values.heartDisease}>
+                            <Select name="HeartDisease" onChange={formik.handleChange} value={formik.values.HeartDisease}>
                                 <MenuItem value="1">1 : Heart disease</MenuItem>
                                 <MenuItem value="0">0 : Normal</MenuItem>
                             </Select>
